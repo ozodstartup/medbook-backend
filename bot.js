@@ -29,9 +29,9 @@ bot.on("contact", async (msg) => {
     });
 
     bot.sendMessage(msg.chat.id, "Telegram muvaffaqiyatli ulandi 🎉");
-  } catch (error) {
-    bot.sendMessage(msg.chat.id, "Xatolik yuz berdi ❌");
-  }
-});
+ } catch (error) {
+  console.log("AXIOS ERROR:", error.response?.data || error.message);
+  bot.sendMessage(msg.chat.id, "Xatolik yuz berdi ❌");
+}
 
 module.exports = bot;
