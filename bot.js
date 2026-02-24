@@ -23,7 +23,7 @@ bot.on("contact", async (msg) => {
   const phone = msg.contact.phone_number;
 
   try {
-    await axios.post("https://medbook-backend-5.onrender.com/api/telegram/connect", {
+    await axios.post("https://medbook-backend-6.onrender.com/api/telegram/connect", {
       telegramId,
       phone,
     });
