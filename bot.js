@@ -2,7 +2,10 @@ const TelegramBot = require('node-telegram-bot-api');
 const axios = require('axios');
 
 const token = process.env.BOT_TOKEN;
-const bot = new TelegramBot(token);
+
+const bot = new TelegramBot(token, { webHook: true });
+
+bot.setWebHook(`${process.env.BACKEND_URL}/webhook`);
 
 bot.onText(/\/start/, (msg) => {
   bot.sendMessage(
@@ -23,7 +26,7 @@ bot.on("contact", async (msg) => {
   const phone = msg.contact.phone_number;
 
   try {
-    await axios.post("https://medbook-backend-6.onrender.com/api/telegram/connect", {
+    await axios.post(`${process.env.BACKEND_URL}/api/telegram/connect`, {
       telegramId,
       phone,
     });
