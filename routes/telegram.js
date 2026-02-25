@@ -5,7 +5,12 @@ const User = require("../models/User");
 router.post("/connect", async (req, res) => {
   const { telegramId, phone } = req.body;
 
-  const user = await User.findOne({ phone });
+  // Telefonni tozalaymiz
+  const cleanedPhone = phone.replace(/\D/g, "");
+
+  const user = await User.findOne({
+    phone: { $regex: cleanedPhone }
+  });
 
   if (!user) {
     return res.status(404).json({ message: "User topilmadi" });
