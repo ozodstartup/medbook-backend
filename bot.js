@@ -5,25 +5,27 @@ const token = process.env.BOT_TOKEN;
 
 const bot = new TelegramBot(token, { webHook: true });
 
+// Webhook ni o‘rnatamiz
 bot.setWebHook(`${process.env.BACKEND_URL}/webhook`);
 
 bot.onText(/\/start/, (msg) => {
   bot.sendMessage(
     msg.chat.id,
-    "MedBook botga xush kelibsiz ✅\n\nTelefon raqamingizni yuboring:",
-    {
-      reply_markup: {
-        keyboard: [[{ text: "📱 Telefon yuborish", request_contact: true }]],
-        resize_keyboard: true,
-        one_time_keyboard: true,
-      },
-    }
+`MedBook botga xush kelibsiz ✅
+
+MedBook saytida qaysi telefon raqam bilan ro'yxatdan o'tgan bo'lsangiz,
+o'sha raqamni yozing.
+
+Masalan:
+998901234567`
   );
 });
 
-bot.on("contact", async (msg) => {
+bot.on("message", async (msg) => {
+  if (msg.text === "/start") return;
+
   const telegramId = msg.from.id;
-  const phone = msg.contact.phone_number;
+  const phone = msg.text.trim();
 
   try {
     await axios.post(`${process.env.BACKEND_URL}/api/telegram/connect`, {
@@ -33,8 +35,10 @@ bot.on("contact", async (msg) => {
 
     bot.sendMessage(msg.chat.id, "Telegram muvaffaqiyatli ulandi 🎉");
   } catch (error) {
-    console.log("AXIOS ERROR:", error.response?.data || error.message);
-    bot.sendMessage(msg.chat.id, "Xatolik yuz berdi ❌");
+    bot.sendMessage(
+      msg.chat.id,
+      "Bu telefon MedBook tizimida topilmadi ❌\nIltimos, saytda ro'yxatdan o'tgan raqamingizni kiriting."
+    );
   }
 });
 
